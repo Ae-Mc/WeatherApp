@@ -246,7 +246,6 @@ class HomePage extends StatelessWidget {
           style: NeumorphicStyle(
             depth: 3,
             color: Theme.of(context).colorScheme.surface,
-            shadowDarkColor: Theme.of(context).colorScheme.background,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -285,7 +284,7 @@ class HomePage extends StatelessWidget {
     return Table(
       defaultColumnWidth: const FlexColumnWidth(1),
       columnWidths: const {
-        // 1: FlexColumnWidth(0.1),
+        1: FixedColumnWidth(20),
       },
       children: [
         TableRow(
@@ -299,6 +298,7 @@ class HomePage extends StatelessWidget {
                     .inString,
               ),
             ),
+            const SizedBox(),
             TableCell(
               child: weatherIndicatorCard(
                 Assets.icons.universal.humidity.path,
@@ -309,24 +309,26 @@ class HomePage extends StatelessWidget {
           ],
         ),
         TableRow(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(width: 30, color: Colors.transparent),
-            ),
-          ),
           children: [
             TableCell(
-              child: weatherIndicatorCard(
-                Assets.icons.universal.thermometer.path,
-                '9',
-                Provider.of<SettingsProvider>(context).speedUnits.inString,
+              child: Padding(
+                padding: const Pad(top: 8),
+                child: weatherIndicatorCard(
+                  Assets.icons.universal.thermometer.path,
+                  '9',
+                  Provider.of<SettingsProvider>(context).speedUnits.inString,
+                ),
               ),
             ),
+            const SizedBox(),
             TableCell(
-              child: weatherIndicatorCard(
-                Assets.icons.universal.thermometer.path,
-                '761',
-                Provider.of<SettingsProvider>(context).pressureUnits.inString,
+              child: Padding(
+                padding: const Pad(top: 8),
+                child: weatherIndicatorCard(
+                  Assets.icons.universal.thermometer.path,
+                  '761',
+                  Provider.of<SettingsProvider>(context).pressureUnits.inString,
+                ),
               ),
             ),
           ],
