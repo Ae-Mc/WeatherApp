@@ -151,9 +151,9 @@ class HomePage extends StatelessWidget {
           topRight: Radius.circular(15),
         ),
       ),
-      child: UnconstrainedBox(
-        constrainedAxis: Axis.horizontal,
+      child: OverflowBox(
         alignment: Alignment.topCenter,
+        maxHeight: double.infinity,
         child: Column(
           children: [
             Container(
