@@ -177,31 +177,7 @@ class HomePage extends StatelessWidget {
                     )
                   : const SizedBox(),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                timeCard(
-                  '06:00',
-                  cardIcon(Assets.icons.light.lightning.svg()),
-                  '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
-                ),
-                timeCard(
-                  '12:00',
-                  cardIcon(Assets.icons.light.sun.svg()),
-                  '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
-                ),
-                timeCard(
-                  '18:00',
-                  cardIcon(Assets.icons.light.rain3Drops.svg()),
-                  '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
-                ),
-                timeCard(
-                  '00:00',
-                  cardIcon(Assets.icons.light.rain.svg()),
-                  '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
-                ),
-              ],
-            ),
+            cardsRow(),
             const SizedBox(height: 16),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
@@ -233,11 +209,43 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  Widget cardsRow() {
+    return Builder(
+      builder: (context) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            timeCard(
+              '06:00',
+              cardIcon(Assets.icons.light.lightning.svg()),
+              '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
+            ),
+            timeCard(
+              '12:00',
+              cardIcon(Assets.icons.light.sun.svg()),
+              '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
+            ),
+            timeCard(
+              '18:00',
+              cardIcon(Assets.icons.light.rain3Drops.svg()),
+              '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
+            ),
+            timeCard(
+              '00:00',
+              cardIcon(Assets.icons.light.rain.svg()),
+              '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
+            ),
+          ],
+        );
+      }
+    );
+  }
+
   Widget timeCard(
-    String time,
-    Widget icon,
-    String temperature,
-  ) {
+      String time,
+      Widget icon,
+      String temperature,
+      ) {
     return Builder(builder: (context) {
       return ConstrainedBox(
         constraints: const BoxConstraints(minWidth: 65, minHeight: 122),
@@ -314,7 +322,7 @@ class HomePage extends StatelessWidget {
               child: Padding(
                 padding: const Pad(top: 8),
                 child: weatherIndicatorCard(
-                  Assets.icons.universal.thermometer.path,
+                  Assets.icons.universal.breeze.path,
                   '9',
                   Provider.of<SettingsProvider>(context).speedUnits.inString,
                 ),
@@ -325,7 +333,7 @@ class HomePage extends StatelessWidget {
               child: Padding(
                 padding: const Pad(top: 8),
                 child: weatherIndicatorCard(
-                  Assets.icons.universal.thermometer.path,
+                  Assets.icons.universal.barometer.path,
                   '761',
                   Provider.of<SettingsProvider>(context).pressureUnits.inString,
                 ),
