@@ -46,6 +46,7 @@ class Style {
       ),
       background: const Color(0xFFE2EBFF),
       surface: const Color(0xFFE0E9FD),
+      onSurface: const Color(0xFF5A5A5A),
       scaffoldBackground: const Color(0xFFE2EBFF),
       visualDensity: VisualDensity.compact,
     ).toTheme.copyWith(
@@ -87,6 +88,7 @@ class Style {
       ),
       background: const Color(0xFF0D172B),
       surface: const Color(0xFF0E182C),
+      onSurface: const Color(0xFFB1B1B1),
       scaffoldBackground: const Color(0xFF0D172B),
       visualDensity: VisualDensity.compact,
     ).toTheme.copyWith(
@@ -105,6 +107,16 @@ class Style {
             thickness: 1,
           ),
           iconTheme: const IconThemeData(color: Colors.white, size: 24),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all(const Pad(all: 8)),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         );
   }

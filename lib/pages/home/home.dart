@@ -341,8 +341,7 @@ class HomePage extends StatelessWidget {
     return Builder(
       builder: (context) {
         return Neumorphic(
-          style:
-              NeumorphicStyle(color: Theme.of(context).colorScheme.background),
+          style: NeumorphicStyle(color: Theme.of(context).colorScheme.surface),
           child: Padding(
             padding: const Pad(vertical: 20, horizontal: 8),
             child: Center(
@@ -351,7 +350,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                     iconAsset,
-                    color: const Color(0xFF5A5A5A),
+                    color: Theme.of(context).colorScheme.onSurface,
                     width: 24,
                     height: 24,
                   ),
@@ -362,7 +361,9 @@ class HomePage extends StatelessWidget {
                         TextSpan(text: text1),
                         TextSpan(
                           text: text2,
-                          style: const TextStyle(color: Color(0xFF5A5A5A)),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ],
                       style: Theme.of(context).textTheme.headline5,
