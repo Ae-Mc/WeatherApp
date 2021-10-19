@@ -23,7 +23,7 @@ class App extends StatelessWidget {
           ),
         )
       ],
-      child: Builder(builder: (context) {
+      builder: (context, _) {
         final style = Style();
         return MaterialApp.router(
           title: 'Flutter Demo',
