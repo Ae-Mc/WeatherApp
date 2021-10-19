@@ -10,11 +10,18 @@ import 'package:provider/provider.dart';
 import 'package:weather_app/data/providers/settings_provider.dart';
 import 'package:weather_app/gen/assets.gen.dart';
 import 'package:weather_app/pages/home/widgets/custom_bottom_sheet.dart';
-import 'package:weather_app/widgets/my_icon_button.dart';
 import 'package:weather_app/router/router.gr.dart';
+import 'package:weather_app/widgets/my_icon_button.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  var bottomSheetExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,26 +65,41 @@ class HomePage extends StatelessWidget {
                       onTap: () => Scaffold.of(context).openDrawer(),
                       icon: const Icon(Icons.menu_rounded),
                     ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '10${Provider.of<SettingsProvider>(context).temperatureUnits.inString}'
-                              .toUpperCase(),
-                          style:
-                              Theme.of(context).textTheme.headline1?.copyWith(
-                                    color: Theme.of(context).iconTheme.color,
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '10${Provider.of<SettingsProvider>(context).temperatureUnits.inString}'
+                                .toUpperCase(),
+                            style:
+                                Theme.of(context).textTheme.headline1?.copyWith(
+                                      color: Theme.of(context).iconTheme.color,
+                                    ),
+                          ),
+                          const SizedBox(height: 8),
+                          AnimatedSizeAndFade(
+                            sizeDuration: const Duration(milliseconds: 300),
+                            fadeDuration: const Duration(milliseconds: 300),
+                            child: bottomSheetExpanded
+                                ? const SizedBox(width: double.infinity)
+                                : Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Text(
+                                      '23 сент. 2021',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline2
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .iconTheme
+                                                .color,
+                                          ),
+                                    ),
                                   ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '23 сент. 2021',
-                          style:
-                              Theme.of(context).textTheme.headline2?.copyWith(
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                     MyIconButton(
                       onTap: () => {},
@@ -136,8 +158,10 @@ class HomePage extends StatelessWidget {
   Widget _bottomSheet() {
     return CustomBottomSheet(
       builder: _bottomSheetBuilder,
-      minChildFactor: 0.3,
-      maxChildFactor: 0.5,
+      onStateChange: (extended) =>
+          setState(() => bottomSheetExpanded = extended),
+      minHeight: 250,
+      maxHeight: 450,
     );
   }
 
@@ -168,40 +192,50 @@ class HomePage extends StatelessWidget {
                 height: 3,
               ),
             ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: extended
-                  ? Padding(
-                      padding: Pad(bottom: extended ? 32 : 0),
-                      child: const Text('23 сентября'),
-                    )
-                  : const SizedBox(),
+            AnimatedSizeAndFade.showHide(
+              show: extended,
+              child: const Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: Pad(bottom: 32),
+                  child: Text('23 сентября'),
+                ),
+              ),
+              sizeDuration: const Duration(milliseconds: 300),
+              fadeDuration: const Duration(milliseconds: 300),
             ),
             cardsRow(),
             const SizedBox(height: 16),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
+            AnimatedSizeAndFade.showHide(
+              show: !extended,
+              child: OutlinedButton(
+                onPressed: () => AutoRouter.of(context).push(
+                  const WeekForecastRoute(),
+                ),
+                child: const Text(
+                  'Прогноз на неделю',
+                ),
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.primaryVariant,
+                  ),
+                  side: MaterialStateProperty.all(BorderSide(
+                    color: Theme.of(context).colorScheme.primaryVariant,
+                  )),
+                ),
+              ),
+              sizeDuration: const Duration(milliseconds: 300),
+              fadeDuration: const Duration(milliseconds: 300),
+            ),
+            AnimatedSize(
+              alignment: Alignment.topCenter,
               child: extended
                   ? Padding(
                       padding: const Pad(top: 16),
                       child: weatherIndicators(context),
                     )
-                  : OutlinedButton(
-                      onPressed: () => AutoRouter.of(context).push(
-                        const WeekForecastRoute(),
-                      ),
-                      child: const Text(
-                        'Прогноз на неделю',
-                      ),
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all(
-                          Theme.of(context).colorScheme.primaryVariant,
-                        ),
-                        side: MaterialStateProperty.all(BorderSide(
-                          color: Theme.of(context).colorScheme.primaryVariant,
-                        )),
-                      ),
-                    ),
+                  : const SizedBox(width: double.infinity),
+              duration: const Duration(milliseconds: 300),
             ),
           ],
         ),
@@ -210,42 +244,40 @@ class HomePage extends StatelessWidget {
   }
 
   Widget cardsRow() {
-    return Builder(
-      builder: (context) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            timeCard(
-              '06:00',
-              cardIcon(Assets.icons.light.lightning.svg()),
-              '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
-            ),
-            timeCard(
-              '12:00',
-              cardIcon(Assets.icons.light.sun.svg()),
-              '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
-            ),
-            timeCard(
-              '18:00',
-              cardIcon(Assets.icons.light.rain3Drops.svg()),
-              '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
-            ),
-            timeCard(
-              '00:00',
-              cardIcon(Assets.icons.light.rain.svg()),
-              '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
-            ),
-          ],
-        );
-      }
-    );
+    return Builder(builder: (context) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          timeCard(
+            '06:00',
+            cardIcon(Assets.icons.light.lightning.svg()),
+            '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
+          ),
+          timeCard(
+            '12:00',
+            cardIcon(Assets.icons.light.sun.svg()),
+            '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
+          ),
+          timeCard(
+            '18:00',
+            cardIcon(Assets.icons.light.rain3Drops.svg()),
+            '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
+          ),
+          timeCard(
+            '00:00',
+            cardIcon(Assets.icons.light.rain.svg()),
+            '12${Provider.of<SettingsProvider>(context).temperatureUnits.inString}',
+          ),
+        ],
+      );
+    });
   }
 
   Widget timeCard(
-      String time,
-      Widget icon,
-      String temperature,
-      ) {
+    String time,
+    Widget icon,
+    String temperature,
+  ) {
     return Builder(builder: (context) {
       return ConstrainedBox(
         constraints: const BoxConstraints(minWidth: 65, minHeight: 122),

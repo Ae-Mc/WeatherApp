@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 
 class CustomBottomSheet extends StatefulWidget {
   final Widget Function(BuildContext context, bool extended) builder;
-  final double minChildFactor;
-  final double maxChildFactor;
+  final void Function(bool extended)? onStateChange;
+  final double minHeight;
+  final double maxHeight;
 
   const CustomBottomSheet({
     Key? key,
     required this.builder,
-    this.minChildFactor = 0.25,
-    this.maxChildFactor = 0.5,
+    this.minHeight = 250,
+    this.maxHeight = 500,
+    this.onStateChange,
   }) : super(key: key);
 
   @override
@@ -20,84 +22,87 @@ class CustomBottomSheet extends StatefulWidget {
 
 class _CustomBottomSheetState extends State<CustomBottomSheet>
     with SingleTickerProviderStateMixin {
-  late AnimationController _currentChildFactor;
+  late AnimationController _currentChildHeight;
   bool extended = false;
 
   @override
   void initState() {
-    _currentChildFactor = AnimationController(
+    _currentChildHeight = AnimationController(
       vsync: this,
-      value: widget.minChildFactor,
+      lowerBound: widget.minHeight,
+      upperBound: widget.maxHeight,
     );
-    _currentChildFactor.addListener(childFactorListener);
+    _currentChildHeight.addListener(childHeightListener);
     super.initState();
   }
 
-  void childFactorListener() {
-    if (_currentChildFactor.value == widget.maxChildFactor) {
-      setState(() {
-        extended = true;
-      });
-    } else if (_currentChildFactor.value == widget.minChildFactor) {
-      setState(() {
-        extended = false;
-      });
+  void childHeightListener() {
+    if (_currentChildHeight.value == widget.maxHeight) {
+      if (extended != true) {
+        setState(() {
+          extended = true;
+        });
+        if (widget.onStateChange != null) {
+          widget.onStateChange!(extended);
+        }
+      }
+    } else if (_currentChildHeight.value == widget.minHeight) {
+      if (extended != false) {
+        setState(() {
+          extended = false;
+        });
+        if (widget.onStateChange != null) {
+          widget.onStateChange!(extended);
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Duration getDuration(double value) {
+    Duration getDuration(double finalPoint) {
       const maxDurationInMilliseconds = 300;
-      final pathLength = _currentChildFactor.value - widget.minChildFactor;
-      final maxPathLength = widget.maxChildFactor - widget.minChildFactor;
+      abs(num x) => x < 0 ? -x : x;
+      final pathLength = abs(_currentChildHeight.value - finalPoint);
+      final maxPathLength = widget.maxHeight - widget.minHeight;
       return Duration(
         milliseconds:
             (maxDurationInMilliseconds * pathLength / maxPathLength).ceil(),
       );
     }
 
-    final mediaQuery = MediaQuery.of(context);
-    final safeScreenHeight = mediaQuery.size.height -
-        mediaQuery.padding.top -
-        mediaQuery.padding.bottom;
-
     return GestureDetector(
       onVerticalDragUpdate: (drag) {
-        _currentChildFactor.value -= drag.delta.dy / safeScreenHeight;
-        _currentChildFactor.value =
-            max(widget.minChildFactor, _currentChildFactor.value);
-        _currentChildFactor.value =
-            min(widget.maxChildFactor, _currentChildFactor.value);
+        _currentChildHeight.value -= drag.delta.dy;
+        _currentChildHeight.value =
+            max(widget.minHeight, _currentChildHeight.value);
+        _currentChildHeight.value =
+            min(widget.maxHeight, _currentChildHeight.value);
       },
       onVerticalDragEnd: (details) {
-        final middleHeightFactor =
-            (widget.maxChildFactor + widget.minChildFactor) / 2;
+        final middleHeightFactor = (widget.minHeight + widget.maxHeight) / 2;
         final _bottomSheetHeightFactorWithAddedVelocity =
-            _currentChildFactor.value -
-                details.velocity.pixelsPerSecond.dy / safeScreenHeight;
+            _currentChildHeight.value - details.velocity.pixelsPerSecond.dy;
         if (_bottomSheetHeightFactorWithAddedVelocity > middleHeightFactor) {
-          _currentChildFactor.animateTo(
-            widget.maxChildFactor,
-            duration:
-                getDuration(widget.maxChildFactor - _currentChildFactor.value),
+          _currentChildHeight.animateTo(
+            widget.maxHeight,
+            duration: getDuration(widget.maxHeight),
             curve: Curves.easeOut,
           );
         } else {
-          _currentChildFactor.animateTo(
-            widget.minChildFactor,
-            duration:
-                getDuration(_currentChildFactor.value - widget.minChildFactor),
+          _currentChildHeight.animateTo(
+            widget.minHeight,
+            duration: getDuration(widget.minHeight),
             curve: Curves.easeOut,
           );
         }
         setState(() {});
       },
       child: AnimatedBuilder(
-        animation: _currentChildFactor,
-        builder: (context, child) => FractionallySizedBox(
-          widthFactor: 1,
-          heightFactor: _currentChildFactor.value,
+        animation: _currentChildHeight,
+        builder: (context, child) => SizedBox(
+          width: double.infinity,
+          height: _currentChildHeight.value,
           child: child,
         ),
         child: widget.builder(context, extended),
