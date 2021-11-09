@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:weather_app/data/models/search_result.dart';
+import 'package:weather_app/tokens.dart';
 
 part 'geonames.g.dart';
 
@@ -12,7 +13,7 @@ abstract class GeoNamesApi {
   Future<SearchResult> search(
     @Query('name', encoded: true) String name, {
     @Query('lang') String language = 'ru',
-    @Query('username') String username = '<some-name>',
+    @Query('username') String username = Tokens.geoNamesUsername,
     @Query('orderby') String orderBy = 'population',
     @Query('fuzzy') double fuzzy = 1,
     @Query('maxRows') int maxRows = 10,
