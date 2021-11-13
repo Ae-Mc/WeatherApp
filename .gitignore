@@ -38,6 +38,7 @@
 *.g.dart
 *.gr.dart
 *.gen.dart
+*.mocks.dart
 lib/gen/*
 
 # Web related
