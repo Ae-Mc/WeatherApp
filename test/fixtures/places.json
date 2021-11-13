@@ -1,0 +1,205 @@
+{
+    "totalResultsCount": 100,
+    "geonames": [
+        {
+            "adminCode1": "66",
+            "lng": "30.25",
+            "geonameId": 536203,
+            "toponymName": "Sankt-Peterburg",
+            "countryId": "2017370",
+            "fcl": "A",
+            "population": 5132000,
+            "countryCode": "RU",
+            "name": "Санкт-Петербург",
+            "fclName": "country, state, region,...",
+            "adminCodes1": {
+                "ISO3166_2": "SPE"
+            },
+            "countryName": "Россия",
+            "fcodeName": "политико-административное деление первого порядка",
+            "adminName1": "Санкт-Петербург",
+            "lat": "59.91667",
+            "fcode": "ADM1"
+        },
+        {
+            "adminCode1": "66",
+            "lng": "30.31413",
+            "geonameId": 498817,
+            "toponymName": "Saint Petersburg",
+            "countryId": "2017370",
+            "fcl": "P",
+            "population": 5028000,
+            "countryCode": "RU",
+            "name": "Санкт-Петербург",
+            "fclName": "city, village,...",
+            "adminCodes1": {
+                "ISO3166_2": "SPE"
+            },
+            "countryName": "Россия",
+            "fcodeName": "центр административного деления первого порядка",
+            "adminName1": "Санкт-Петербург",
+            "lat": "59.93863",
+            "fcode": "PPLA"
+        },
+        {
+            "adminCode1": "FL",
+            "lng": "-82.52853",
+            "geonameId": 12213342,
+            "toponymName": "Tampa-St. Petersburg-Clearwater, FL Metro Area",
+            "countryId": "6252001",
+            "fcl": "L",
+            "population": 2780000,
+            "countryCode": "US",
+            "name": "Tampa-St. Petersburg-Clearwater, FL Metro Area",
+            "fclName": "parks,area, ...",
+            "adminCodes1": {
+                "ISO3166_2": "FL"
+            },
+            "countryName": "США",
+            "fcodeName": "экономический регион",
+            "adminName1": "Флорида",
+            "lat": "28.12342",
+            "fcode": "RGNE"
+        },
+        {
+            "adminCode1": "FL",
+            "lng": "-82.51007",
+            "geonameId": 6955101,
+            "toponymName": "Tampa-St. Petersburg-Clearwater",
+            "countryId": "6252001",
+            "fcl": "L",
+            "population": 2733761,
+            "countryCode": "US",
+            "name": "Tampa-St. Petersburg-Clearwater",
+            "fclName": "parks,area, ...",
+            "adminCodes1": {
+                "ISO3166_2": "FL"
+            },
+            "countryName": "США",
+            "fcodeName": "экономический регион",
+            "adminName1": "Флорида",
+            "lat": "27.87307",
+            "fcode": "RGNE"
+        },
+        {
+            "adminCode1": "FL",
+            "lng": "-82.67927",
+            "geonameId": 4171563,
+            "toponymName": "St. Petersburg",
+            "countryId": "6252001",
+            "fcl": "P",
+            "population": 257083,
+            "countryCode": "US",
+            "name": "St. Petersburg",
+            "fclName": "city, village,...",
+            "adminCodes1": {
+                "ISO3166_2": "FL"
+            },
+            "countryName": "США",
+            "fcodeName": "населенный пункт",
+            "adminName1": "Флорида",
+            "lat": "27.77086",
+            "fcode": "PPL"
+        },
+        {
+            "adminCode1": "FL",
+            "lng": "-82.64298",
+            "geonameId": 7318106,
+            "toponymName": "City of Saint Petersburg",
+            "countryId": "6252001",
+            "fcl": "A",
+            "population": 244769,
+            "countryCode": "US",
+            "name": "City of Saint Petersburg",
+            "fclName": "country, state, region,...",
+            "adminCodes1": {
+                "ISO3166_2": "FL"
+            },
+            "countryName": "США",
+            "fcodeName": "политико-административное деление третьего порядка",
+            "adminName1": "Флорида",
+            "lat": "27.76141",
+            "fcode": "ADM3"
+        },
+        {
+            "adminCode1": "66",
+            "lng": "29.70183",
+            "geonameId": 463830,
+            "toponymName": "Zelenogorsk",
+            "countryId": "2017370",
+            "fcl": "P",
+            "population": 14958,
+            "countryCode": "RU",
+            "name": "Зеленогорск",
+            "fclName": "city, village,...",
+            "adminCodes1": {
+                "ISO3166_2": "SPE"
+            },
+            "countryName": "Россия",
+            "fcodeName": "населенный пункт",
+            "adminName1": "Санкт-Петербург",
+            "lat": "60.19968",
+            "fcode": "PPL"
+        },
+        {
+            "adminCode1": "FL",
+            "lng": "-82.74121",
+            "geonameId": 4171522,
+            "toponymName": "Saint Pete Beach",
+            "countryId": "6252001",
+            "fcl": "P",
+            "population": 9346,
+            "countryCode": "US",
+            "name": "Saint Pete Beach",
+            "fclName": "city, village,...",
+            "adminCodes1": {
+                "ISO3166_2": "FL"
+            },
+            "countryName": "США",
+            "fcodeName": "населенный пункт",
+            "adminName1": "Флорида",
+            "lat": "27.72531",
+            "fcode": "PPL"
+        },
+        {
+            "adminCode1": "PA",
+            "lng": "-79.65283",
+            "geonameId": 5210484,
+            "toponymName": "Saint Petersburg",
+            "countryId": "6252001",
+            "fcl": "P",
+            "population": 400,
+            "countryCode": "US",
+            "name": "Город Санкт-Петербург",
+            "fclName": "city, village,...",
+            "adminCodes1": {
+                "ISO3166_2": "PA"
+            },
+            "countryName": "США",
+            "fcodeName": "населенный пункт",
+            "adminName1": "Пенсильвания",
+            "lat": "41.16173",
+            "fcode": "PPL"
+        },
+        {
+            "adminCode1": "66",
+            "lng": "30.35667",
+            "geonameId": 562636,
+            "toponymName": "Finlyandsky Railway Station",
+            "countryId": "2017370",
+            "fcl": "S",
+            "population": 0,
+            "countryCode": "RU",
+            "name": "Финляндский вокзал",
+            "fclName": "spot, building, farm",
+            "adminCodes1": {
+                "ISO3166_2": "SPE"
+            },
+            "countryName": "Россия",
+            "fcodeName": "ж/д вокзал",
+            "adminName1": "Санкт-Петербург",
+            "lat": "59.95556",
+            "fcode": "RSTN"
+        }
+    ]
+}
