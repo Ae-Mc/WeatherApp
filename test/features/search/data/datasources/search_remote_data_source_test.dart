@@ -7,6 +7,7 @@ import 'package:mockito/mockito.dart';
 import 'package:weather_app/core/error/exception.dart';
 import 'package:weather_app/core/network/network_info.dart';
 import 'package:weather_app/features/search/data/datasources/search_remote_data_source.dart';
+import 'package:weather_app/features/search/data/datasources/search_remote_data_source_impl.dart';
 import 'package:weather_app/features/search/data/models/place_model.dart';
 import 'search_remote_data_source_test.mocks.dart';
 
