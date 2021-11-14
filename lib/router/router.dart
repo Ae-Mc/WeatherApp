@@ -4,7 +4,7 @@ import 'package:weather_app/pages/favorites/favorites.dart';
 import 'package:weather_app/pages/home/home.dart';
 import 'package:weather_app/pages/loading/loading.dart';
 import 'package:weather_app/pages/search/search.dart';
-import 'package:weather_app/pages/settings/settings.dart';
+import 'package:weather_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:weather_app/pages/week_forecast/week_forecast.dart';
 
 @MaterialAutoRouter(

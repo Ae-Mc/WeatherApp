@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Switch extends StatelessWidget {
+class CustomSwitch extends StatelessWidget {
   final Duration duration;
   final bool state;
   final String text1;
   final String text2;
 
-  const Switch({
+  const CustomSwitch({
     Key? key,
     required this.duration,
     required this.state,
