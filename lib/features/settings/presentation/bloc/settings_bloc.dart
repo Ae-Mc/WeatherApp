@@ -17,8 +17,8 @@ const uninitializedErrorMessage =
     'Ошибка! Попытка изменения настроек до их инициализации.';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  late SetSettings setSettings;
-  late GetSettings getSettings;
+  late final SetSettings setSettings;
+  late final GetSettings getSettings;
 
   SettingsBloc() : super(Empty()) {
     on<Init>((event, emit) async {
