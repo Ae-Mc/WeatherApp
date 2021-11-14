@@ -1,7 +1,11 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/features/search/domain/entities/place.dart';
 
+part 'settings.g.dart';
+
+@CopyWith()
 class Settings extends Equatable {
   final TemperatureUnits temperatureUnits;
   final SpeedUnits speedUnits;
