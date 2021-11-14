@@ -4,11 +4,6 @@ abstract class SettingsEvent extends Equatable {
   const SettingsEvent();
 }
 
-class AppStarted extends SettingsEvent {
-  @override
-  List<Object?> get props => [];
-}
-
 abstract class SinglePropertyEvent<T> extends SettingsEvent {
   final T property;
 
@@ -16,6 +11,10 @@ abstract class SinglePropertyEvent<T> extends SettingsEvent {
 
   @override
   List<Object?> get props => [property];
+}
+
+class Init extends SinglePropertyEvent<SettingsRepository> {
+  const Init(SettingsRepository repository) : super(repository);
 }
 
 class SetTemperatureUnits extends SinglePropertyEvent<TemperatureUnits> {
