@@ -29,5 +29,5 @@ class Error extends SettingsState {
   const Error(this.message);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [message];
 }
