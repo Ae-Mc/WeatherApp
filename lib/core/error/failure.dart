@@ -1,5 +1,10 @@
 import 'package:equatable/equatable.dart';
 
+const serverErrorMessage =
+    'Произошла ошибка при обработке запроса. Код ошибки: {}';
+const connectionErrorMessage =
+    'Произошла ошибка при подключении к серверу. Возможно, у вас нет соединения с интернетом?';
+
 class Failure extends Equatable {
   const Failure();
 

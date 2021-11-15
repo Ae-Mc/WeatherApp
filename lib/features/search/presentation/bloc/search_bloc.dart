@@ -7,10 +7,6 @@ import 'package:weather_app/features/search/domain/usecases/search_places.dart';
 part 'search_event.dart';
 part 'search_state.dart';
 
-const serverErrorMessage =
-    'Произошла ошибка при обработку запроса. Код ошибки: {}';
-const connectionErrorMessage =
-    'Произошла ошибка при подключении к серверу. Возможно, у вас нет соединения с интернетом?';
 const unknownErrorMessage = 'Произошла неизвестная ошибка при поиске.';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
