@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:weather_app/core/error/exception.dart';
+import 'package:weather_app/core/error/handlers.dart';
 import 'package:weather_app/core/network/network_info.dart';
 import 'package:weather_app/features/search/data/datasources/search_remote_data_source.dart';
 import 'package:weather_app/features/search/data/models/place_model.dart';
@@ -18,18 +18,12 @@ class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
 
   @override
   Future<List<PlaceModel>> searchPlaces(String query) async {
-    try {
+    return await Handlers.handleDioRequestException(() async {
       final result = await api.search(query);
       return (jsonDecode(result.data)['geonames'] as List)
           .map((e) => PlaceModel.fromJson(e))
           .toList();
-    } on DioError catch (e) {
-      if (e.response == null) {
-        throw const ConnectionException();
-      } else {
-        throw ServerException(e.response!.statusCode!);
-      }
-    }
+    });
   }
 }
 

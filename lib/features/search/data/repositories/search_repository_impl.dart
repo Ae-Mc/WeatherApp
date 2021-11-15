@@ -1,4 +1,4 @@
-import 'package:weather_app/core/error/exception.dart';
+import 'package:weather_app/core/error/handlers.dart';
 import 'package:weather_app/core/network/network_info.dart';
 import 'package:weather_app/features/search/data/datasources/search_remote_data_source.dart';
 import 'package:weather_app/features/search/domain/entities/place.dart';
@@ -18,13 +18,9 @@ class SearchRepositoryImpl extends SearchRepository {
   @override
   Future<Either<Failure, List<Place>>> searchPlaces(String query) async {
     if (await networkInfo.isConnected) {
-      try {
-        return Right(await remoteDataSource.searchPlaces(query));
-      } on ServerException catch (e) {
-        return Left(ServerFailure(e.errorCode));
-      } on ConnectionException {
-        return const Left(ConnectionFailure());
-      }
+      return Handlers.handleRemoteDataSourceRequestExceptons(
+        () async => (await remoteDataSource.searchPlaces(query)),
+      );
     } else {
       return const Left(ConnectionFailure());
     }
