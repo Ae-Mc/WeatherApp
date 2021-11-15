@@ -83,13 +83,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   boxShape:
                       NeumorphicBoxShape.roundRect(BorderRadius.circular(15)),
                 ),
-                child: Padding(
-                  padding: const Pad(all: 16),
-                  child: Text(
-                      place.country == null
-                          ? place.name
-                          : '${place.country}, ${place.name}',
-                      style: Theme.of(context).textTheme.overline),
+                padding: const Pad(all: 16),
+                child: Text(
+                  place.country == null
+                      ? place.name
+                      : '${place.country}, ${place.name}',
+                  style: Theme.of(context).textTheme.overline,
+                  maxLines: 1,
                 ),
               ),
             ),
