@@ -17,7 +17,7 @@ class LoadingPage extends StatelessWidget {
 
   Future<void> init(BuildContext context) async {
     BlocProvider.of<SettingsBloc>(context).add(
-      Init(
+      SettingsInitialized(
         SettingsRepositoryImpl(
           localDataSource: SettingsLocalDataSourceImpl(
             await SharedPreferences.getInstance(),

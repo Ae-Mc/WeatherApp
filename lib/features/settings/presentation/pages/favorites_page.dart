@@ -29,10 +29,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
             Expanded(
               child: BlocBuilder<SettingsBloc, SettingsState>(
                 buildWhen: (_, newState) {
-                  return newState is! Loading;
+                  return newState is! SettingsInProgress;
                 },
                 builder: (context, state) {
-                  if (state is Loaded) {
+                  if (state is SettingsSuccess) {
                     return ListView.separated(
                       padding: const Pad(horizontal: 20, vertical: 16),
                       itemCount: state.settings.favorites.length,
@@ -40,7 +40,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           _favoriteRow(state.settings.favorites[index]),
                       separatorBuilder: (_, __) => const SizedBox(height: 16),
                     );
-                  } else if (state is Error) {
+                  } else if (state is SettingsFailure) {
                     return Text(
                       state.message,
                       style: TextStyle(color: Colors.red[700]),
@@ -65,7 +65,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       return InkWell(
         borderRadius: BorderRadius.circular(25),
         onTap: () {
-          context.read<SettingsBloc>().add(SetActivePlace(place));
+          context.read<SettingsBloc>().add(SettingsActivePlaceSet(place));
           Navigator.of(context).pop();
         },
         child: Stack(
@@ -101,7 +101,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 aspectRatio: 1,
                 child: GestureDetector(
                   onTap: () => BlocProvider.of<SettingsBloc>(context)
-                      .add(RemoveFavorite(place)),
+                      .add(SettingsFavoriteRemoved(place)),
                   child: Neumorphic(
                     style: NeumorphicStyle(
                       color: Theme.of(context).colorScheme.brightness ==

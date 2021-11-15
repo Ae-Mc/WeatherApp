@@ -10,8 +10,7 @@ import 'package:weather_app/features/search/data/repositories/search_repository_
 import 'package:weather_app/features/search/domain/entities/place.dart';
 import 'package:weather_app/features/search/presentation/bloc/search_bloc.dart'
     as search;
-import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart'
-    as settings;
+import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -163,18 +162,18 @@ class __SearchPageState extends State<_SearchPage> {
   }
 
   Widget cityRow(BuildContext context, Place place) {
-    return BlocBuilder<settings.SettingsBloc, settings.SettingsState>(
-      buildWhen: (_, newState) => newState is! settings.Loading,
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      buildWhen: (_, newState) => newState is! SettingsInProgress,
       builder: (context, state) {
-        if (state is settings.Loaded) {
+        if (state is SettingsSuccess) {
           final isFavorite = state.settings.favorites.contains(place);
-          final bloc = BlocProvider.of<settings.SettingsBloc>(context);
+          final bloc = BlocProvider.of<SettingsBloc>(context);
 
           return ListTile(
             dense: true,
             onTap: () async {
-              BlocProvider.of<settings.SettingsBloc>(context)
-                  .add(settings.SetActivePlace(place));
+              BlocProvider.of<SettingsBloc>(context)
+                  .add(SettingsActivePlaceSet(place));
               // await context.read<WeatherProvider>().updateWeatherData();
               Navigator.of(context).pop();
             },
@@ -188,8 +187,8 @@ class __SearchPageState extends State<_SearchPage> {
             trailing: IconButton(
               onPressed: () {
                 (isFavorite
-                    ? bloc.add(settings.RemoveFavorite(place))
-                    : bloc.add(settings.AddFavorite(place)));
+                    ? bloc.add(SettingsFavoriteRemoved(place))
+                    : bloc.add(SettingsFavoriteAdded(place)));
               },
               icon: Icon(
                 isFavorite ? Icons.star_rounded : Icons.star_border_rounded,

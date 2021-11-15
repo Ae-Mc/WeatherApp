@@ -39,14 +39,14 @@ class App extends StatelessWidget {
           final style = Style();
           return BlocBuilder<SettingsBloc, SettingsState>(
             buildWhen: (oldState, newState) {
-              return newState is Loaded;
+              return newState is SettingsSuccess;
             },
             builder: (context, state) {
               return MaterialApp.router(
                 title: 'Weather app',
                 theme: style.lightTheme,
                 darkTheme: style.darkTheme,
-                themeMode: (state is Loaded)
+                themeMode: (state is SettingsSuccess)
                     ? state.settings.themeMode
                     : ThemeMode.dark,
                 routerDelegate: _appRouter.delegate(),

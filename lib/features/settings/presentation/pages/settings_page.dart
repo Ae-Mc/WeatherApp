@@ -56,12 +56,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       padding: const Pad(horizontal: 20),
                       child: BlocBuilder<SettingsBloc, SettingsState>(
                         buildWhen: (previousState, newState) {
-                          return newState is! Loading;
+                          return newState is! SettingsInProgress;
                         },
                         builder: (context, state) {
                           switch (state.runtimeType) {
-                            case Loaded:
-                              final curState = state as Loaded;
+                            case SettingsSuccess:
+                              final curState = state as SettingsSuccess;
                               return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -76,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     onTap: () =>
                                         BlocProvider.of<SettingsBloc>(context)
                                             .add(
-                                      SetTemperatureUnits(
+                                      SetringsTemperatureUnitsSet(
                                         curState.settings.temperatureUnits ==
                                                 TemperatureUnits.celcius
                                             ? TemperatureUnits.farenheit
@@ -95,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     onTap: () =>
                                         BlocProvider.of<SettingsBloc>(context)
                                             .add(
-                                      SetSpeedUnits(
+                                      SettingsSpeedUnitsSet(
                                         curState.settings.speedUnits ==
                                                 SpeedUnits.metersPerSecond
                                             ? SpeedUnits.kilometersPerHour
@@ -114,7 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     onTap: () =>
                                         BlocProvider.of<SettingsBloc>(context)
                                             .add(
-                                      SetPressureUnits(
+                                      SettingsPressureUnitsSet(
                                         curState.settings.pressureUnits ==
                                                 PressureUnits.hectopascal
                                             ? PressureUnits.mmOfMercury
@@ -124,8 +124,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                   ),
                                 ],
                               );
-                            case Error:
-                              return Text((state as Error).message);
+                            case SettingsFailure:
+                              return Text((state as SettingsFailure).message);
                             default:
                               return Text('Unknown settings state: $state');
                           }
@@ -143,7 +143,7 @@ class _SettingsPageState extends State<SettingsPage> {
               const SizedBox(height: 16),
               BlocBuilder<SettingsBloc, SettingsState>(
                 buildWhen: (oldState, newState) {
-                  return newState is Loaded;
+                  return newState is SettingsSuccess;
                 },
                 builder: (context, state) {
                   return _switchRow(
@@ -151,10 +151,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: 'Тема',
                     text1: 'Тёмная',
                     text2: 'Светлая',
-                    state:
-                        (state as Loaded).settings.themeMode == ThemeMode.light,
+                    state: (state as SettingsSuccess).settings.themeMode ==
+                        ThemeMode.light,
                     onTap: () => BlocProvider.of<SettingsBloc>(context).add(
-                      SetThemeMode(
+                      SettingsThemeModeSet(
                         state.settings.themeMode == ThemeMode.dark
                             ? ThemeMode.light
                             : ThemeMode.dark,

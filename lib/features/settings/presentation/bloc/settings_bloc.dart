@@ -20,17 +20,17 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   late final SetSettings setSettings;
   late final GetSettings getSettings;
 
-  SettingsBloc() : super(Empty()) {
-    on<Init>((event, emit) async {
-      emit(Loading());
+  SettingsBloc() : super(SettingsInitial()) {
+    on<SettingsInitialized>((event, emit) async {
+      emit(SettingsInProgress());
       setSettings = SetSettings(event.property);
       getSettings = GetSettings(event.property);
       await loadSettings(
         emit,
-        (settings) => emit(Loaded(settings)),
+        (settings) => emit(SettingsSuccess(settings)),
       );
     });
-    on<AddFavorite>(
+    on<SettingsFavoriteAdded>(
       (event, emit) async => updateSettings(
         emit,
         (settings) => settings.copyWith(
@@ -38,7 +38,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         ),
       ),
     );
-    on<RemoveFavorite>(
+    on<SettingsFavoriteRemoved>(
       (event, emit) async => updateSettings(
         emit,
         (settings) => settings.copyWith(
@@ -50,31 +50,31 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   void initializePropertySetters() {
-    on<SetTemperatureUnits>(
+    on<SetringsTemperatureUnitsSet>(
       (event, emit) async => await updateSettings(
         emit,
         (settings) => settings.copyWith(temperatureUnits: event.property),
       ),
     );
-    on<SetSpeedUnits>(
+    on<SettingsSpeedUnitsSet>(
       (event, emit) async => await updateSettings(
         emit,
         (settings) => settings.copyWith(speedUnits: event.property),
       ),
     );
-    on<SetPressureUnits>(
+    on<SettingsPressureUnitsSet>(
       (event, emit) async => await updateSettings(
         emit,
         (settings) => settings.copyWith(pressureUnits: event.property),
       ),
     );
-    on<SetThemeMode>(
+    on<SettingsThemeModeSet>(
       (event, emit) async => await updateSettings(
         emit,
         (settings) => settings.copyWith(themeMode: event.property),
       ),
     );
-    on<SetActivePlace>(
+    on<SettingsActivePlaceSet>(
       (event, emit) async => await updateSettings(
         emit,
         (settings) => settings.copyWith(activePlace: event.property),
@@ -89,7 +89,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     final settingsEither = await getSettings(NoParams());
     await settingsEither.fold(
       (l) {
-        emit(const Error(loadErrorMessage));
+        emit(const SettingsFailure(loadErrorMessage));
       },
       f,
     );
@@ -99,17 +99,17 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     Emitter<SettingsState> emit,
     Settings Function(Settings settings) modifier,
   ) async {
-    if (state is Empty || state is Error) {
-      emit(const Error(uninitializedErrorMessage));
+    if (state is SettingsInitial || state is SettingsFailure) {
+      emit(const SettingsFailure(uninitializedErrorMessage));
       return;
     }
-    final curState = state as Loaded;
-    emit(Loading());
+    final curState = state as SettingsSuccess;
+    emit(SettingsInProgress());
     final newSettings = modifier(curState.settings);
     final result = await setSettings(Params(newSettings));
     result.fold(
-      (l) => emit(const Error(saveErrorMessage)),
-      (r) => emit(Loaded(newSettings)),
+      (l) => emit(const SettingsFailure(saveErrorMessage)),
+      (r) => emit(SettingsSuccess(newSettings)),
     );
   }
 }

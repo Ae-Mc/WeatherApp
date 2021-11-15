@@ -4,29 +4,29 @@ abstract class SettingsState extends Equatable {
   const SettingsState();
 }
 
-class Empty extends SettingsState {
+class SettingsInitial extends SettingsState {
   @override
   List<Object> get props => [];
 }
 
-class Loading extends SettingsState {
+class SettingsInProgress extends SettingsState {
   @override
   List<Object?> get props => [];
 }
 
-class Loaded extends SettingsState {
+class SettingsSuccess extends SettingsState {
   final Settings settings;
 
-  const Loaded(this.settings);
+  const SettingsSuccess(this.settings);
 
   @override
   List<Object?> get props => [settings];
 }
 
-class Error extends SettingsState {
+class SettingsFailure extends SettingsState {
   final String message;
 
-  const Error(this.message);
+  const SettingsFailure(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -13,34 +13,35 @@ abstract class SinglePropertyEvent<T> extends SettingsEvent {
   List<Object?> get props => [property];
 }
 
-class Init extends SinglePropertyEvent<SettingsRepository> {
-  const Init(SettingsRepository repository) : super(repository);
+class SettingsInitialized extends SinglePropertyEvent<SettingsRepository> {
+  const SettingsInitialized(SettingsRepository repository) : super(repository);
 }
 
-class SetTemperatureUnits extends SinglePropertyEvent<TemperatureUnits> {
-  const SetTemperatureUnits(TemperatureUnits units) : super(units);
+class SetringsTemperatureUnitsSet
+    extends SinglePropertyEvent<TemperatureUnits> {
+  const SetringsTemperatureUnitsSet(TemperatureUnits units) : super(units);
 }
 
-class SetSpeedUnits extends SinglePropertyEvent<SpeedUnits> {
-  const SetSpeedUnits(SpeedUnits units) : super(units);
+class SettingsSpeedUnitsSet extends SinglePropertyEvent<SpeedUnits> {
+  const SettingsSpeedUnitsSet(SpeedUnits units) : super(units);
 }
 
-class SetPressureUnits extends SinglePropertyEvent<PressureUnits> {
-  const SetPressureUnits(PressureUnits units) : super(units);
+class SettingsPressureUnitsSet extends SinglePropertyEvent<PressureUnits> {
+  const SettingsPressureUnitsSet(PressureUnits units) : super(units);
 }
 
-class SetThemeMode extends SinglePropertyEvent<ThemeMode> {
-  const SetThemeMode(ThemeMode themeMode) : super(themeMode);
+class SettingsThemeModeSet extends SinglePropertyEvent<ThemeMode> {
+  const SettingsThemeModeSet(ThemeMode themeMode) : super(themeMode);
 }
 
-class SetActivePlace extends SinglePropertyEvent<Place> {
-  const SetActivePlace(Place place) : super(place);
+class SettingsActivePlaceSet extends SinglePropertyEvent<Place> {
+  const SettingsActivePlaceSet(Place place) : super(place);
 }
 
-class AddFavorite extends SinglePropertyEvent<Place> {
-  const AddFavorite(Place place) : super(place);
+class SettingsFavoriteAdded extends SinglePropertyEvent<Place> {
+  const SettingsFavoriteAdded(Place place) : super(place);
 }
 
-class RemoveFavorite extends SinglePropertyEvent<Place> {
-  const RemoveFavorite(Place place) : super(place);
+class SettingsFavoriteRemoved extends SinglePropertyEvent<Place> {
+  const SettingsFavoriteRemoved(Place place) : super(place);
 }
