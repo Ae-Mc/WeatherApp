@@ -8,8 +8,7 @@ import 'package:weather_app/core/network/network_info.dart';
 import 'package:weather_app/features/search/data/datasources/search_remote_data_source_impl.dart';
 import 'package:weather_app/features/search/data/repositories/search_repository_impl.dart';
 import 'package:weather_app/features/search/domain/entities/place.dart';
-import 'package:weather_app/features/search/presentation/bloc/search_bloc.dart'
-    as search;
+import 'package:weather_app/features/search/presentation/bloc/search_bloc.dart';
 import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
 
 class SearchPage extends StatelessWidget {
@@ -20,9 +19,9 @@ class SearchPage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         // TODO: use dependency injection for repository and api creation
-        return search.SearchBloc()
+        return SearchBloc()
           ..add(
-            search.Init(
+            SearchInitialized(
               SearchRepositoryImpl(
                 remoteDataSource: SearchRemoteDataSourceImpl(
                   api: GeoNamesApi(Dio()),
@@ -57,10 +56,10 @@ class __SearchPageState extends State<_SearchPage> {
         });
       }
       if (_searchController.text.isEmpty) {
-        BlocProvider.of<search.SearchBloc>(context).add(search.Clear());
+        BlocProvider.of<SearchBloc>(context).add(const SearchCleared());
       } else {
-        BlocProvider.of<search.SearchBloc>(context)
-            .add(search.Search(_searchController.text));
+        BlocProvider.of<SearchBloc>(context)
+            .add(SearchSearched(_searchController.text));
       }
     });
     super.initState();
@@ -120,9 +119,9 @@ class __SearchPageState extends State<_SearchPage> {
               ),
               const SizedBox(height: 24),
               Expanded(
-                child: BlocBuilder<search.SearchBloc, search.SearchState>(
+                child: BlocBuilder<SearchBloc, SearchState>(
                   builder: (context, state) {
-                    if (state is search.Loaded) {
+                    if (state is SearchSuccess) {
                       return state.places.isEmpty
                           ? const Text('Ничего не найдено')
                           : ListView.separated(
@@ -133,18 +132,16 @@ class __SearchPageState extends State<_SearchPage> {
                                 height: 1,
                               ),
                             );
-                    } else if (state is search.Error) {
+                    } else if (state is SearchFailure) {
                       return Text(
                         state.message,
                         style: TextStyle(color: Colors.red[700]),
                       );
-                    } else if (state is search.Loading) {
+                    } else if (state is SearchInProgress) {
                       return const Align(
                         alignment: Alignment.center,
                         child: CircularProgressIndicator(),
                       );
-                    } else if (state is search.Empty) {
-                      return const SizedBox();
                     } else {
                       return const Text(
                         'Unexpected error',

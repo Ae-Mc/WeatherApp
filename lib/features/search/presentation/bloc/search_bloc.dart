@@ -16,20 +16,20 @@ const unknownErrorMessage = 'Произошла неизвестная ошиб�
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   late final SearchPlaces searchPlaces;
 
-  SearchBloc() : super(Initial()) {
-    on<Init>((event, emit) {
-      emit(Loading());
+  SearchBloc() : super(SearchInitial()) {
+    on<SearchInitialized>((event, emit) {
+      emit(SearchInProgress());
       searchPlaces = SearchPlaces(event.repository);
-      emit(Empty());
+      emit(const SearchSuccess([]));
     });
-    on<Search>((event, emit) async {
-      emit(Loading());
+    on<SearchSearched>((event, emit) async {
+      emit(SearchInProgress());
       (await searchPlaces(Params(query: event.query))).fold(
-        (l) => emit(Error(mapFailureToMessage(l))),
-        (r) => emit(Loaded(r)),
+        (l) => emit(SearchFailure(mapFailureToMessage(l))),
+        (r) => emit(SearchSuccess(r)),
       );
     });
-    on<Clear>((event, emit) => emit(Empty()));
+    on<SearchCleared>((event, emit) => emit(const SearchSuccess([])));
   }
 
   String mapFailureToMessage(Failure failure) {

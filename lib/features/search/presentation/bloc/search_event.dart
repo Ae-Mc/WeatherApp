@@ -2,27 +2,29 @@ part of 'search_bloc.dart';
 
 abstract class SearchEvent extends Equatable {
   const SearchEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
-class Init extends SearchEvent {
+class SearchInitialized extends SearchEvent {
   final SearchRepository repository;
 
-  const Init(this.repository);
+  const SearchInitialized(this.repository);
 
   @override
   List<Object?> get props => [repository];
 }
 
-class Search extends SearchEvent {
+class SearchSearched extends SearchEvent {
   final String query;
 
-  const Search(this.query);
+  const SearchSearched(this.query);
 
   @override
   List<Object?> get props => [query];
 }
 
-class Clear extends SearchEvent {
-  @override
-  List<Object?> get props => [];
+class SearchCleared extends SearchEvent {
+  const SearchCleared();
 }
