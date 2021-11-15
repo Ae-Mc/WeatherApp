@@ -1,12 +1,10 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:provider/provider.dart';
-import 'package:weather_app/data/models/place.dart';
-import 'package:weather_app/data/providers/settings_provider.dart';
-import 'package:weather_app/data/providers/weather_provider.dart';
-import 'package:weather_app/data/storage/storage.dart';
+import 'package:weather_app/features/search/domain/entities/place.dart';
+import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:weather_app/widgets/page_header.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -29,12 +27,31 @@ class _FavoritesPageState extends State<FavoritesPage> {
               child: PageHeader(title: 'Избранное'),
             ),
             Expanded(
-              child: ListView.separated(
-                padding: const Pad(horizontal: 20, vertical: 16),
-                itemCount: Storage.favorites.length,
-                itemBuilder: (_, index) =>
-                    _favoriteRow(Storage.favorites[index]),
-                separatorBuilder: (_, __) => const SizedBox(height: 16),
+              child: BlocBuilder<SettingsBloc, SettingsState>(
+                buildWhen: (_, newState) {
+                  return newState is! Loading;
+                },
+                builder: (context, state) {
+                  if (state is Loaded) {
+                    return ListView.separated(
+                      padding: const Pad(horizontal: 20, vertical: 16),
+                      itemCount: state.settings.favorites.length,
+                      itemBuilder: (_, index) =>
+                          _favoriteRow(state.settings.favorites[index]),
+                      separatorBuilder: (_, __) => const SizedBox(height: 16),
+                    );
+                  } else if (state is Error) {
+                    return Text(
+                      state.message,
+                      style: TextStyle(color: Colors.red[700]),
+                    );
+                  } else {
+                    return Text(
+                      'При получении списка избранного что-то пошло не так!',
+                      style: TextStyle(color: Colors.red[700]),
+                    );
+                  }
+                },
               ),
             ),
           ],
@@ -47,9 +64,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
     return Builder(builder: (context) {
       return InkWell(
         borderRadius: BorderRadius.circular(25),
-        onTap: () async {
-          context.read<SettingsProvider>().activePlace = place;
-          await context.read<WeatherProvider>().updateWeatherData();
+        onTap: () {
+          context.read<SettingsBloc>().add(SetActivePlace(place));
           Navigator.of(context).pop();
         },
         child: Stack(
@@ -84,10 +100,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: GestureDetector(
-                  onTap: () {
-                    Storage.removeFavorite(place)
-                        .then((_) => setState(() => {}));
-                  },
+                  onTap: () => BlocProvider.of<SettingsBloc>(context)
+                      .add(RemoveFavorite(place)),
                   child: Neumorphic(
                     style: NeumorphicStyle(
                       color: Theme.of(context).colorScheme.brightness ==
