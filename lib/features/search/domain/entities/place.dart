@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
-@immutable
 class Place extends Equatable {
   final String? country;
   final String name;
