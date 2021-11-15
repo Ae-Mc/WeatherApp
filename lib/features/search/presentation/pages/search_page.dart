@@ -21,17 +21,14 @@ class SearchPage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         // TODO: use dependency injection for repository and api creation
-        final networkInfo = NetworkInfoImpl(InternetConnectionChecker());
-
         return search.SearchBloc()
           ..add(
             search.Init(
               SearchRepositoryImpl(
                 remoteDataSource: SearchRemoteDataSourceImpl(
                   api: GeoNamesApi(Dio()),
-                  networkInfo: networkInfo,
                 ),
-                networkInfo: networkInfo,
+                networkInfo: NetworkInfoImpl(InternetConnectionChecker()),
               ),
             ),
           );

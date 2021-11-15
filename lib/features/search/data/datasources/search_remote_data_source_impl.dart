@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:weather_app/core/error/handlers.dart';
-import 'package:weather_app/core/network/network_info.dart';
 import 'package:weather_app/features/search/data/datasources/search_remote_data_source.dart';
 import 'package:weather_app/features/search/data/models/place_model.dart';
 import 'package:weather_app/tokens.dart';
@@ -12,9 +11,8 @@ part 'search_remote_data_source_impl.g.dart';
 
 class SearchRemoteDataSourceImpl implements SearchRemoteDataSource {
   final GeoNamesApi api;
-  final NetworkInfo networkInfo;
 
-  SearchRemoteDataSourceImpl({required this.api, required this.networkInfo});
+  SearchRemoteDataSourceImpl({required this.api});
 
   @override
   Future<List<PlaceModel>> searchPlaces(String query) async {

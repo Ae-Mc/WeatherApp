@@ -26,10 +26,7 @@ void main() {
   group('SearchRemoteDataSource tests.', () {
     setUp(() {
       geoNamesApi = GeoNamesApi(dio);
-      remoteDataSource = SearchRemoteDataSourceImpl(
-        api: geoNamesApi,
-        networkInfo: networkInfo,
-      );
+      remoteDataSource = SearchRemoteDataSourceImpl(api: geoNamesApi);
     });
 
     test('Throws ConnectionException on null response', () async {
