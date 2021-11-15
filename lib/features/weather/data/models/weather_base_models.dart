@@ -33,7 +33,7 @@ abstract class BaseWeather extends Equatable {
       dateTime: dt,
       temp: getTemp(),
       windSpeed: windSpeed,
-      pressure: pressure,
+      pressure: pressure.toDouble(),
       humidity: humidity,
       icon: WeatherIcon.values[weather.first.icon.index],
     );

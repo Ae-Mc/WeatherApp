@@ -20,7 +20,7 @@ class WeatherData extends Equatable {
   final DateTime dateTime;
   final double temp;
   final double windSpeed;
-  final int pressure;
+  final double pressure;
   final int humidity;
   final WeatherIcon icon;
 
