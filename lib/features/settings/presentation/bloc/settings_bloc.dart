@@ -113,3 +113,15 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 }
+
+extension ParseTempToString on TemperatureUnits {
+  String get inString => ['˚c', '˚F'][index];
+}
+
+extension ParseSpeedToString on SpeedUnits {
+  String get inString => ['м/с', 'км/ч'][index];
+}
+
+extension ParsePressureToString on PressureUnits {
+  String get inString => ['мм.рт.ст', 'гПа'][index];
+}
