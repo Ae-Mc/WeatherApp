@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:weather_app/data/models/weather.dart';
 import 'package:weather_app/data/providers/providers.dart';
 import 'package:weather_app/gen/assets.gen.dart';
-import 'package:weather_app/pages/home/widgets/custom_bottom_sheet.dart';
+import 'package:weather_app/features/weather/presentation/widgets/custom_bottom_sheet.dart';
 import 'package:weather_app/router/router.gr.dart';
 import 'package:weather_app/widgets/my_icon_button.dart';
 
