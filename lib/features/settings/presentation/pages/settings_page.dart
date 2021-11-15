@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' hide Switch;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:weather_app/features/settings/domain/entities/settings.dart';
-import 'package:weather_app/features/settings/presentation/pages/custom_switch.dart';
+import 'package:weather_app/features/settings/presentation/widgets/custom_switch.dart';
 import 'package:weather_app/widgets/page_header.dart';
 
 class SettingsPage extends StatefulWidget {
