@@ -13,14 +13,13 @@ part 'settings_state.dart';
 
 const loadErrorMessage = 'Неизвестная ошибка при получении настроек.';
 const saveErrorMessage = 'Неизвестная ошибка при сохранении настроек.';
-const uninitializedErrorMessage =
-    'Ошибка! Попытка изменения настроек до их инициализации.';
+const uninitializedErrorMessage = 'SettingsBloc не инициализирован';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   late final SetSettings setSettings;
   late final GetSettings getSettings;
 
-  SettingsBloc() : super(SettingsInitial()) {
+  SettingsBloc() : super(const SettingsFailure(uninitializedErrorMessage)) {
     on<SettingsInitialized>((event, emit) async {
       emit(SettingsInProgress());
       setSettings = SetSettings(event.property);
@@ -99,10 +98,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     Emitter<SettingsState> emit,
     Settings Function(Settings settings) modifier,
   ) async {
-    if (state is SettingsInitial || state is SettingsFailure) {
-      emit(const SettingsFailure(uninitializedErrorMessage));
-      return;
-    }
     final curState = state as SettingsSuccess;
     emit(SettingsInProgress());
     final newSettings = modifier(curState.settings);

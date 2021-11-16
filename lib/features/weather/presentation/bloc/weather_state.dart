@@ -7,10 +7,6 @@ abstract class WeatherState extends Equatable {
   List<Object> get props => [];
 }
 
-class WeatherInitial extends WeatherState {
-  const WeatherInitial();
-}
-
 class WeatherLoadInProgress extends WeatherState {
   const WeatherLoadInProgress();
 }

@@ -14,15 +14,14 @@ import 'package:weather_app/gen/assets.gen.dart';
 part 'weather_event.dart';
 part 'weather_state.dart';
 
-const unknownErrorMessage =
-    'Произошла неизвестная ошибка при попытке получить информацию о погоде';
+const uninitializedErrorMessage = 'WeatherBloc не инициализирован.';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   late final GetWeather getWeather;
   late final StreamSubscription settingsBlocSubscription;
   Settings? _lastSettings;
 
-  WeatherBloc() : super(const WeatherInitial()) {
+  WeatherBloc() : super(const WeatherFailure(uninitializedErrorMessage)) {
     on<WeatherInitialized>((event, emit) {
       getWeather = GetWeather(event.repository);
       settingsBlocSubscription =
@@ -38,7 +37,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     });
     on<WeatherUpdateRequested>((event, emit) async {
       if (_lastSettings == null) {
-        emit(const WeatherFailure(unknownErrorMessage));
+        emit(const WeatherFailure(uninitializedErrorMessage));
       } else {
         await updateWeather(emit, _lastSettings!.activePlace);
       }
@@ -139,7 +138,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     if (failure is ServerFailure) {
       return serverErrorMessage;
     }
-    return unknownErrorMessage;
+    throw UnimplementedError();
   }
 
   @override
