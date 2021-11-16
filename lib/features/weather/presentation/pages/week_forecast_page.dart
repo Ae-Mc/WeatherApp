@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:weather_app/data/models/day_weather.dart';
-import 'package:weather_app/data/providers/providers.dart';
-import 'package:weather_app/data/providers/settings_provider.dart';
+import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:weather_app/features/weather/domain/entities/weather.dart';
+import 'package:weather_app/features/weather/presentation/bloc/weather_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/gen/assets.gen.dart';
 
 class WeekForecastPage extends StatelessWidget {
@@ -30,26 +30,32 @@ class WeekForecastPage extends StatelessWidget {
                 Expanded(
                   child: OverflowBox(
                     maxWidth: MediaQuery.of(context).size.width,
-                    child: CarouselSlider.builder(
-                      itemCount: context.select<WeatherProvider, int>(
-                        (value) => value.currentWeather.daily.length,
-                      ),
-                      itemBuilder: (context, index, _) =>
-                          Builder(builder: (context) {
-                        final dayWeather =
-                            context.select<WeatherProvider, DayWeather>(
-                          (value) {
-                            return value.currentWeather.daily[index];
-                          },
-                        );
-                        return WeatherCard(dayWeather);
-                      }),
-                      options: CarouselOptions(
-                        enableInfiniteScroll: false,
-                        viewportFraction: 0.9,
-                        enlargeCenterPage: true,
-                        height: double.infinity,
-                      ),
+                    child: BlocBuilder<WeatherBloc, WeatherState>(
+                      builder: (context, state) {
+                        if (state is WeatherSuccess) {
+                          return CarouselSlider.builder(
+                            itemCount: state.weather.daily.length,
+                            itemBuilder: (context, index, _) =>
+                                Builder(builder: (context) {
+                              return WeatherCard(state.weather.daily[index]);
+                            }),
+                            options: CarouselOptions(
+                              enableInfiniteScroll: false,
+                              viewportFraction: 0.9,
+                              enlargeCenterPage: true,
+                              height: double.infinity,
+                            ),
+                          );
+                        } else if (state is WeatherLoadInProgress) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is WeatherFailure) {
+                          return const SizedBox();
+                        } else {
+                          throw UnimplementedError();
+                        }
+                      },
                     ),
                   ),
                 ),
@@ -74,8 +80,8 @@ class WeekForecastPage extends StatelessWidget {
 }
 
 class WeatherCard extends StatelessWidget {
-  final DayWeather dayWeather;
-  const WeatherCard(this.dayWeather, {Key? key}) : super(key: key);
+  final WeatherData weather;
+  const WeatherCard(this.weather, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -105,61 +111,48 @@ class WeatherCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              DateFormat('d MMMM', 'ru_RU').format(dayWeather.dt),
+              DateFormat('d MMMM', 'ru_RU').format(weather.dateTime),
               style: Theme.of(context).textTheme.headline3,
             ),
             const SizedBox(height: 16),
-            WeatherProvider.getWeatherIconAssetFromWeatherDataIcon(
-              dayWeather.weather.first.icon,
-            ).image(height: 85),
+            WeatherBloc.getIconFromWeather(weather).image(height: 85),
             const SizedBox(height: 35),
             Align(
               alignment: Alignment.bottomLeft,
-              child: Column(
-                children: [
-                  buildRow(
-                    Assets.icons.universal.thermometer.path,
-                    context.select<WeatherProvider, String>(
-                      (value) => value
-                          .getTempInCurrentUnits(
-                              (dayWeather.temp.min + dayWeather.temp.max) / 2)
-                          .round()
-                          .toString(),
-                    ),
-                    context.select<SettingsProvider, String>(
-                        (value) => value.temperatureUnits.inString),
-                  ),
-                  const SizedBox(height: 24),
-                  buildRow(
-                    Assets.icons.universal.breeze.path,
-                    context.select<WeatherProvider, String>(
-                      (value) => value
-                          .getSpeedInCurrentUnits(dayWeather.windSpeed)
-                          .round()
-                          .toString(),
-                    ),
-                    context.select<SettingsProvider, String>(
-                        (value) => value.speedUnits.inString),
-                  ),
-                  const SizedBox(height: 24),
-                  buildRow(
-                    Assets.icons.universal.humidity.path,
-                    dayWeather.humidity.toString(),
-                    '%',
-                  ),
-                  const SizedBox(height: 24),
-                  buildRow(
-                    Assets.icons.universal.barometer.path,
-                    context.select<WeatherProvider, String>(
-                      (value) => value
-                          .getPressureInCurrentUnits(dayWeather.pressure)
-                          .round()
-                          .toString(),
-                    ),
-                    context.select<SettingsProvider, String>(
-                        (value) => value.pressureUnits.inString),
-                  ),
-                ],
+              child: BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (context, state) {
+                  if (state is SettingsSuccess) {
+                    return Column(
+                      children: [
+                        buildRow(
+                          Assets.icons.universal.thermometer.path,
+                          weather.temp.round().toString(),
+                          state.settings.temperatureUnits.inString,
+                        ),
+                        const SizedBox(height: 24),
+                        buildRow(
+                          Assets.icons.universal.breeze.path,
+                          weather.windSpeed.round().toString(),
+                          state.settings.speedUnits.inString,
+                        ),
+                        const SizedBox(height: 24),
+                        buildRow(
+                          Assets.icons.universal.humidity.path,
+                          weather.humidity.toString(),
+                          '%',
+                        ),
+                        const SizedBox(height: 24),
+                        buildRow(
+                          Assets.icons.universal.barometer.path,
+                          weather.pressure.round().toString(),
+                          state.settings.pressureUnits.inString,
+                        ),
+                      ],
+                    );
+                  } else {
+                    throw UnimplementedError();
+                  }
+                },
               ),
             ),
           ],
