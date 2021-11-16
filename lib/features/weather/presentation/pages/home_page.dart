@@ -11,9 +11,9 @@ import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.da
 import 'package:weather_app/features/weather/domain/entities/weather.dart';
 import 'package:weather_app/features/weather/presentation/bloc/weather_bloc.dart';
 import 'package:weather_app/features/weather/presentation/widgets/custom_bottom_sheet.dart';
+import 'package:weather_app/features/weather/presentation/widgets/my_icon_button.dart';
 import 'package:weather_app/gen/assets.gen.dart';
 import 'package:weather_app/router/router.gr.dart';
-import 'package:weather_app/widgets/my_icon_button.dart';
 
 const settingsUnknowFailureMessage =
     'Произошла непредвиденная ошибка при получении настроек';
