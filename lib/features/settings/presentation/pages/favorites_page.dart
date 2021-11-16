@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:weather_app/app.dart';
 import 'package:weather_app/features/search/domain/entities/place.dart';
 import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:weather_app/widgets/page_header.dart';
@@ -100,7 +101,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: GestureDetector(
-                  onTap: () => BlocProvider.of<SettingsBloc>(context)
+                  onTap: () => getIt
+                      .get<SettingsBloc>()
                       .add(SettingsFavoriteRemoved(place)),
                   child: Neumorphic(
                     style: NeumorphicStyle(

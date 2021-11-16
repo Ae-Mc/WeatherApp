@@ -1,6 +1,7 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:flutter/material.dart' hide Switch;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/app.dart';
 import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:weather_app/features/settings/domain/entities/settings.dart';
 import 'package:weather_app/features/settings/presentation/widgets/custom_switch.dart';
@@ -73,16 +74,15 @@ class _SettingsPageState extends State<SettingsPage> {
                                     text2: '˚F',
                                     state: curState.settings.temperatureUnits ==
                                         TemperatureUnits.farenheit,
-                                    onTap: () =>
-                                        BlocProvider.of<SettingsBloc>(context)
-                                            .add(
-                                      SetringsTemperatureUnitsSet(
-                                        curState.settings.temperatureUnits ==
-                                                TemperatureUnits.celcius
-                                            ? TemperatureUnits.farenheit
-                                            : TemperatureUnits.celcius,
-                                      ),
-                                    ),
+                                    onTap: () => getIt.get<SettingsBloc>().add(
+                                          SetringsTemperatureUnitsSet(
+                                            curState.settings
+                                                        .temperatureUnits ==
+                                                    TemperatureUnits.celcius
+                                                ? TemperatureUnits.farenheit
+                                                : TemperatureUnits.celcius,
+                                          ),
+                                        ),
                                   ),
                                   _divider(),
                                   _switchRow(
@@ -92,16 +92,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                     text2: 'км/ч',
                                     state: curState.settings.speedUnits ==
                                         SpeedUnits.kilometersPerHour,
-                                    onTap: () =>
-                                        BlocProvider.of<SettingsBloc>(context)
-                                            .add(
-                                      SettingsSpeedUnitsSet(
-                                        curState.settings.speedUnits ==
-                                                SpeedUnits.metersPerSecond
-                                            ? SpeedUnits.kilometersPerHour
-                                            : SpeedUnits.metersPerSecond,
-                                      ),
-                                    ),
+                                    onTap: () => getIt.get<SettingsBloc>().add(
+                                          SettingsSpeedUnitsSet(
+                                            curState.settings.speedUnits ==
+                                                    SpeedUnits.metersPerSecond
+                                                ? SpeedUnits.kilometersPerHour
+                                                : SpeedUnits.metersPerSecond,
+                                          ),
+                                        ),
                                   ),
                                   _divider(),
                                   _switchRow(
@@ -111,16 +109,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                     text2: 'гПа',
                                     state: curState.settings.pressureUnits ==
                                         PressureUnits.hectopascal,
-                                    onTap: () =>
-                                        BlocProvider.of<SettingsBloc>(context)
-                                            .add(
-                                      SettingsPressureUnitsSet(
-                                        curState.settings.pressureUnits ==
-                                                PressureUnits.hectopascal
-                                            ? PressureUnits.mmOfMercury
-                                            : PressureUnits.hectopascal,
-                                      ),
-                                    ),
+                                    onTap: () => getIt.get<SettingsBloc>().add(
+                                          SettingsPressureUnitsSet(
+                                            curState.settings.pressureUnits ==
+                                                    PressureUnits.hectopascal
+                                                ? PressureUnits.mmOfMercury
+                                                : PressureUnits.hectopascal,
+                                          ),
+                                        ),
                                   ),
                                 ],
                               );
@@ -153,13 +149,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     text2: 'Светлая',
                     state: (state as SettingsSuccess).settings.themeMode ==
                         ThemeMode.light,
-                    onTap: () => BlocProvider.of<SettingsBloc>(context).add(
-                      SettingsThemeModeSet(
-                        state.settings.themeMode == ThemeMode.dark
-                            ? ThemeMode.light
-                            : ThemeMode.dark,
-                      ),
-                    ),
+                    onTap: () => getIt.get<SettingsBloc>().add(
+                          SettingsThemeModeSet(
+                            state.settings.themeMode == ThemeMode.dark
+                                ? ThemeMode.light
+                                : ThemeMode.dark,
+                          ),
+                        ),
                   );
                 },
               ),

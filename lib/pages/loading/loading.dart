@@ -5,7 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_app/app.dart';
 import 'package:weather_app/core/network/network_info.dart';
+import 'package:weather_app/features/search/data/datasources/search_remote_data_source_impl.dart';
+import 'package:weather_app/features/search/data/repositories/search_repository_impl.dart';
+import 'package:weather_app/features/search/domain/repositories/search_repository.dart';
 import 'package:weather_app/features/settings/data/datasources/settings_local_data_source_impl.dart';
 import 'package:weather_app/features/settings/data/repositories/settings_repository_impl.dart';
 import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
@@ -18,38 +22,60 @@ class LoadingPage extends StatelessWidget {
   const LoadingPage({Key? key}) : super(key: key);
 
   Future<void> init(BuildContext context) async {
-    BlocProvider.of<SettingsBloc>(context).add(
-      SettingsInitialized(
-        SettingsRepositoryImpl(
-          localDataSource: SettingsLocalDataSourceImpl(
-            await SharedPreferences.getInstance(),
-          ),
+    getIt.registerSingleton<Dio>(Dio());
+    getIt.registerSingleton<NetworkInfo>(
+      NetworkInfoImpl(InternetConnectionChecker()),
+    );
+    getIt.registerSingleton<SearchRepository>(
+      SearchRepositoryImpl(
+        remoteDataSource: SearchRemoteDataSourceImpl(
+          api: GeoNamesApi(getIt.get<Dio>()),
         ),
+        networkInfo: getIt.get<NetworkInfo>(),
       ),
     );
 
-    BlocProvider.of<WeatherBloc>(context).add(
-      WeatherInitialized(
-        WeatherRepositoryImpl(
-          networkInfo: NetworkInfoImpl(InternetConnectionChecker()),
-          remoteDataSource: WeatherRemoteDataSourceImpl(
-            api: OpenWeatherApi(Dio()),
-          ),
-        ),
-        BlocProvider.of<SettingsBloc>(context),
-      ),
+    getIt.registerSingleton<SettingsBloc>(
+      BlocProvider.of<SettingsBloc>(context),
     );
+    getIt.registerSingleton<WeatherBloc>(
+      BlocProvider.of<WeatherBloc>(context),
+    );
+    getIt.registerSingleton<StackRouter>(AutoRouter.of(context));
 
-    var router = AutoRouter.of(context);
+    getIt.get<SettingsBloc>().add(
+          SettingsInitialized(
+            SettingsRepositoryImpl(
+              localDataSource: SettingsLocalDataSourceImpl(
+                await SharedPreferences.getInstance(),
+              ),
+            ),
+          ),
+        );
+
+    getIt.get<WeatherBloc>().add(
+          WeatherInitialized(
+            repository: WeatherRepositoryImpl(
+              networkInfo: getIt.get<NetworkInfo>(),
+              remoteDataSource: WeatherRemoteDataSourceImpl(
+                api: OpenWeatherApi(getIt.get<Dio>()),
+              ),
+            ),
+            settingsBloc: getIt.get<SettingsBloc>(),
+          ),
+        );
+
     await Future.wait([
       initializeDateFormatting('ru_RU'),
-      BlocProvider.of<SettingsBloc>(context)
+      getIt
+          .get<SettingsBloc>()
           .stream
           .firstWhere((element) => element is SettingsSuccess)
-          .then((value) => BlocProvider.of<WeatherBloc>(context)
-              .add(const WeatherUpdateRequested()))
+          .then((value) {
+        getIt.get<WeatherBloc>().add(const WeatherUpdateRequested());
+      })
     ]);
-    router.replace(const HomeRoute());
+    getIt.get<StackRouter>().replace(const HomeRoute());
   }
 
   @override

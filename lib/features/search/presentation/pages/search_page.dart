@@ -1,13 +1,10 @@
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:weather_app/core/network/network_info.dart';
-import 'package:weather_app/features/search/data/datasources/search_remote_data_source_impl.dart';
-import 'package:weather_app/features/search/data/repositories/search_repository_impl.dart';
+import 'package:weather_app/app.dart';
 import 'package:weather_app/features/search/domain/entities/place.dart';
+import 'package:weather_app/features/search/domain/repositories/search_repository.dart';
 import 'package:weather_app/features/search/presentation/bloc/search_bloc.dart';
 import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
 
@@ -17,33 +14,21 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-        // TODO: use dependency injection for repository and api creation
-        return SearchBloc()
-          ..add(
-            SearchInitialized(
-              SearchRepositoryImpl(
-                remoteDataSource: SearchRemoteDataSourceImpl(
-                  api: GeoNamesApi(Dio()),
-                ),
-                networkInfo: NetworkInfoImpl(InternetConnectionChecker()),
-              ),
-            ),
-          );
-      },
-      child: const _SearchPage(),
+      create: (context) =>
+          SearchBloc()..add(SearchInitialized(getIt.get<SearchRepository>())),
+      child: const SearchView(),
     );
   }
 }
 
-class _SearchPage extends StatefulWidget {
-  const _SearchPage({Key? key}) : super(key: key);
+class SearchView extends StatefulWidget {
+  const SearchView({Key? key}) : super(key: key);
 
   @override
-  State<_SearchPage> createState() => __SearchPageState();
+  State<SearchView> createState() => _SearchViewState();
 }
 
-class __SearchPageState extends State<_SearchPage> {
+class _SearchViewState extends State<SearchView> {
   final _searchController = TextEditingController();
   var _clearButtonShowed = false;
 
@@ -164,13 +149,12 @@ class __SearchPageState extends State<_SearchPage> {
       builder: (context, state) {
         if (state is SettingsSuccess) {
           final isFavorite = state.settings.favorites.contains(place);
-          final bloc = BlocProvider.of<SettingsBloc>(context);
+          final bloc = getIt.get<SettingsBloc>();
 
           return ListTile(
             dense: true,
             onTap: () async {
-              BlocProvider.of<SettingsBloc>(context)
-                  .add(SettingsActivePlaceSet(place));
+              bloc.add(SettingsActivePlaceSet(place));
               // await context.read<WeatherProvider>().updateWeatherData();
               Navigator.of(context).pop();
             },

@@ -11,7 +11,10 @@ class WeatherInitialized extends WeatherEvent {
   final WeatherRepository repository;
   final SettingsBloc settingsBloc;
 
-  const WeatherInitialized(this.repository, this.settingsBloc);
+  const WeatherInitialized({
+    required this.repository,
+    required this.settingsBloc,
+  });
 
   @override
   List<Object> get props => [repository, settingsBloc];
