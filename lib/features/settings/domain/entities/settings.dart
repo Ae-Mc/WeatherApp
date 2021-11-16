@@ -27,7 +27,7 @@ class Settings extends Equatable {
       : temperatureUnits = TemperatureUnits.celcius,
         speedUnits = SpeedUnits.metersPerSecond,
         pressureUnits = PressureUnits.mmOfMercury,
-        themeMode = ThemeMode.system,
+        themeMode = ThemeMode.light,
         activePlace = const Place(
           name: 'Санкт-Петербург',
           latitude: 59.93863,
