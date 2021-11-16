@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/app.dart';
 import 'package:weather_app/features/settings/domain/entities/settings.dart';
 import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:weather_app/features/weather/domain/entities/weather.dart';
@@ -31,40 +32,80 @@ class _HomePageState extends State<HomePage> {
   var bottomSheetExpanded = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      final state = getIt.get<WeatherBloc>().state;
+      if (state is WeatherFailure) {
+        showError(state.message);
+      }
+    });
+  }
+
+  Future<void> refresh() async {
+    getIt.get<WeatherBloc>().add(const WeatherUpdateRequested());
+    ScaffoldMessenger.of(context).clearSnackBars();
+    await getIt
+        .get<WeatherBloc>()
+        .stream
+        .firstWhere((element) => element is! WeatherLoadInProgress);
+    return;
+  }
+
+  void showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(days: 1),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Повторить попытку',
+          textColor: Theme.of(context).colorScheme.onBackground,
+          onPressed: refresh,
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          RefreshIndicator(
-            color: Theme.of(context).colorScheme.onBackground,
-            onRefresh: () {
-              context.read<WeatherBloc>().add(const WeatherUpdateRequested());
-              return context
-                  .read<WeatherBloc>()
-                  .stream
-                  .firstWhere((element) => element is! WeatherLoadInProgress);
-            },
-            child: LayoutBuilder(
-              builder: (_, constraints) => SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: ConstrainedBox(
-                  constraints: constraints,
-                  child: _header(),
+      body: BlocConsumer<WeatherBloc, WeatherState>(
+        listener: (context, state) {
+          if (state is WeatherFailure) {
+            showError(state.message);
+          }
+        },
+        builder: (context, state) => Stack(
+          children: [
+            RefreshIndicator(
+              color: Theme.of(context).colorScheme.onBackground,
+              onRefresh: refresh,
+              child: LayoutBuilder(
+                builder: (_, constraints) => SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: constraints,
+                    child: _header(),
+                  ),
                 ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: CustomBottomSheet(
-              builder: (context, expanded) => HomeBottomSheetContent(expanded),
-              onStateChange: (extended) =>
-                  setState(() => bottomSheetExpanded = extended),
-              minHeight: 250,
-              maxHeight: 450,
-            ),
-          ),
-        ],
+            if (state is! WeatherFailure)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: CustomBottomSheet(
+                  builder: (context, expanded) =>
+                      HomeBottomSheetContent(expanded),
+                  onStateChange: (extended) =>
+                      setState(() => bottomSheetExpanded = extended),
+                  minHeight: 250,
+                  maxHeight: 450,
+                ),
+              ),
+          ],
+        ),
       ),
       drawer: const HomeDrawer(),
     );
@@ -540,7 +581,7 @@ class WeatherBlocBuilder extends StatelessWidget {
       } else if (state is WeatherLoadInProgress) {
         return const Center(child: CircularProgressIndicator());
       } else if (state is WeatherFailure) {
-        return ErrorText(state.message);
+        return Container();
       } else {
         return const ErrorText(weatherUnknowFailureMessage);
       }
