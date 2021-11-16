@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
-import 'package:weather_app/data/providers/settings_provider.dart';
-import 'package:weather_app/data/providers/weather_provider.dart';
 import 'package:weather_app/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:weather_app/features/weather/presentation/bloc/weather_bloc.dart';
 import 'package:weather_app/router/router.gr.dart';
@@ -24,21 +21,8 @@ class App extends StatelessWidget {
       lazy: true,
       child: BlocProvider(
         create: (context) => WeatherBloc(),
-        child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => SettingsProvider()),
-            ChangeNotifierProxyProvider<SettingsProvider, WeatherProvider>(
-              create: (_) => WeatherProvider(),
-              update: (_, settings, weather) {
-                if (weather == null) {
-                  throw ArgumentError.notNull('weather');
-                }
-                weather.settings = settings;
-                return weather;
-              },
-            ),
-          ],
-          builder: (context, _) {
+        child: Builder(
+          builder: (context) {
             final style = Style();
             return BlocBuilder<SettingsBloc, SettingsState>(
               buildWhen: (oldState, newState) {
