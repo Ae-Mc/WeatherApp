@@ -136,7 +136,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       return connectionErrorMessage;
     }
     if (failure is ServerFailure) {
-      return serverErrorMessage;
+      return serverErrorMessage.replaceFirst(
+          '{}', failure.errorCode.toString());
     }
     throw UnimplementedError();
   }
