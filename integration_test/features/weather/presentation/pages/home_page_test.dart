@@ -35,6 +35,7 @@ class HomePageObject {
   }
 }
 
+@Tags(['integration'])
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
