@@ -24,13 +24,10 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherBloc() : super(const WeatherFailure(uninitializedErrorMessage)) {
     on<WeatherInitialized>((event, emit) {
       getWeather = GetWeather(event.repository);
-      settingsBlocSubscription =
-          event.settingsBloc.stream.listen((settingsState) {
-        if (settingsState is SettingsSuccess) {
-          _lastSettings = settingsState.settings;
-          add(WeatherPlaceChanged(settingsState.settings.activePlace));
-        }
-      });
+      updateSettings(emit, event.settingsBloc.state);
+      settingsBlocSubscription = event.settingsBloc.stream.listen(
+        (settingsState) => updateSettings(emit, settingsState),
+      );
     });
     on<WeatherPlaceChanged>((event, emit) async {
       await updateWeather(emit, event.place);
@@ -42,6 +39,13 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         await updateWeather(emit, _lastSettings!.activePlace);
       }
     });
+  }
+
+  void updateSettings(Emitter<WeatherState> emit, SettingsState settingsState) {
+    if (settingsState is SettingsSuccess) {
+      _lastSettings = settingsState.settings;
+      add(WeatherPlaceChanged(settingsState.settings.activePlace));
+    }
   }
 
   Future<void> updateWeather(Emitter<WeatherState> emit, Place place) async {
