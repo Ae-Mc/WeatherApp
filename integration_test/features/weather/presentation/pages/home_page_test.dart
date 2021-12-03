@@ -68,5 +68,15 @@ void main() {
       },
     );
 
+    testWidgets(
+      "Test home screen refresh.",
+      (WidgetTester tester) async {
+        app.main();
+        await tester.pumpAndSettle();
+
+        final homePage = HomePageObject(tester);
+        await homePage.refreshWeather();
+      },
+    );
   });
 }
