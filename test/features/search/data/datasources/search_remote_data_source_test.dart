@@ -40,23 +40,22 @@ void main() {
     });
 
     test(
-      'Throws ServerException with status code on response with code != 200',
-      () async {
-        when(dio.fetch(any)).thenThrow(
-          DioError(
+        'Throws ServerException with status code on response with code not equal to 200',
+        () async {
+      when(dio.fetch(any)).thenThrow(
+        DioError(
+          requestOptions: RequestOptions(path: ''),
+          response: Response(
             requestOptions: RequestOptions(path: ''),
-            response: Response(
-              requestOptions: RequestOptions(path: ''),
-              statusCode: 404,
-            ),
+            statusCode: 404,
           ),
-        );
-        expect(
-          remoteDataSource.searchPlaces('Any'),
-          throwsA(const ServerException(404)),
-        );
-      },
-    );
+        ),
+      );
+      expect(
+        remoteDataSource.searchPlaces('Any'),
+        throwsA(const ServerException(404)),
+      );
+    });
 
     test('Search results parsing', () async {
       when(dio.fetch(any)).thenAnswer(
